@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	id="com.nixplay.crypto"
+	version="0.1.0">
+
+	<name>Crypto</name>
+
+	<engines>
+		<engine name="cordova" version=">=3.0.0" />
+	</engines>
+
+	<js-module src="www/crypto.js" name="Crypto">
+		<clobbers target="window.Crypto" />
+	</js-module>
+
+	<!-- ios -->
+	<platform name="ios">
+		<config-file target="config.xml" parent="/*">
+			<feature name="Crypto">
+				<param name="ios-package" value="Crypto"/>
+			</feature>
+		</config-file>
+		<!-- Unlike with android source files don't need target -->
+		<header-file src="src/ios/Crypto.h"/>
+		<source-file src="src/ios/Crypto.m"/>
+		<header-file src="src/ios/FileMD5Hash.h"/>
+		<source-file src="src/ios/FileMD5Hash.m"/>
+	</platform>
+
+	<!-- Android -->
+	<platform name="android">
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="Crypto">
+				<param name="android-package" value="com.nixplay.crypto.Crypto"/>
+			</feature>
+		</config-file>
+
+		<!-- The following section is for permission -->
+		<config-file target="AndroidManifest.xml" parent="/manifest">
+		</config-file>
+
+		<source-file src="src/android/Crypto.java" target-dir="src/com/nixplay/plugin/" />
+	</platform>
+
+</plugin>

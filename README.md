@@ -1,7 +1,7 @@
 #README
 ##### To add to an existing project, run the following command when  inside the root directory of the project
 ```
-	cordova plugin add <path to plugin directory>
+	cordova plugin add `https://github.com/nixplay/crypto.git`
 ```
 
 To use simply call from inside javascript code block
