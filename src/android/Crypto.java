@@ -28,9 +28,20 @@ public class Crypto extends CordovaPlugin {
 			System.out.println("[CordovaLog] File Name: " + fileName);
 			if(fileName!=null && !"".equals(fileName)) {
 		    	try {
-		    		Uri uri = Uri.parse(fileName);
-					String md5 = getMD5Checksum(uri);
-					callbackContext.success(md5);
+
+		    		if(fileName.startsWith("content://")) {
+		    			Uri uri = Uri.parse(fileName);
+			    		System.out.println("[CordovaLog] Uri: " + uri);
+			    		String md5 = getMD5Checksum(uri);
+			    		System.out.println("[CordovaLog] MD5: " + md5);
+						callbackContext.success(md5);
+		    		} else {
+		    			File file = new File(fileName);
+	                    System.out.println("[CordovaLog] File: " + file);
+	                    String md5 = getMD5Checksum(file);
+	                    System.out.println("[CordovaLog] MD5: " + md5);
+	                    callbackContext.success(md5);
+		    		}
 				} catch(Exception ioe) {
 					System.out.println("[CordovaLog] Error when generating md5: " + fileName);
 					callbackContext.error("Error when generating md5: " + fileName);
@@ -44,6 +55,33 @@ public class Crypto extends CordovaPlugin {
 		} else {
 			return false;
 		}
+	}
+
+	public byte[] createChecksum(File file) throws Exception {
+		 InputStream fis =  new FileInputStream(file);
+		//InputStream fis = cordova.getActivity().getContentResolver().openInputStream(file);
+		byte[] buffer = new byte[1024];
+		MessageDigest complete = MessageDigest.getInstance("MD5");
+		int numRead;
+		do {
+			numRead = fis.read(buffer);
+			if (numRead > 0) {
+				complete.update(buffer, 0, numRead);
+			}
+		} while (numRead != -1);
+		fis.close();
+		return complete.digest();
+	}
+
+	// a byte array to a HEX string
+	public String getMD5Checksum(File file) throws Exception {
+		byte[] b = createChecksum(file);
+		String result = "";
+
+		for (int i=0; i < b.length; i++) {
+			result += Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+		}
+		return result;
 	}
 
 	public byte[] createChecksum(Uri uri) throws Exception {
