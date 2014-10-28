@@ -36,6 +36,9 @@ public class Crypto extends CordovaPlugin {
 			    		System.out.println("[CordovaLog] MD5: " + md5);
 						callbackContext.success(md5);
 		    		} else {
+		    			if(fileName.startsWith("file://")) {
+							fileName = fileName.replaceAll("file://", "");
+						}
 		    			File file = new File(fileName);
 	                    System.out.println("[CordovaLog] File: " + file);
 	                    String md5 = getMD5Checksum(file);
